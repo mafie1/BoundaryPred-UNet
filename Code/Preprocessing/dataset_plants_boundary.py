@@ -8,8 +8,6 @@ from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
-from plant_transforms import mask_train_transform, image_train_transform
-
 
 
 class CustomDataset(Dataset):
@@ -45,23 +43,36 @@ class CustomDataset(Dataset):
         return image, mask
 
 
-image_directory = '/Users/luisa/Documents/BA_Thesis/CVPPP2015_LCC_training_data/A1'
 
-"""
-contents = os.listdir(image_directory)
-images = list(filter(lambda k: 'rgb' in k,contents ))
-masks = list(filter(lambda k: 'fg' in k, contents))
+if __name__ == '__main__':
+    from plant_transforms import mask_train_transform, image_train_transform
+    from UNET import UNET
+    from cv2 import threshold
+    import cv2
+    HEIGHT, WIDTH = 128, 128
+    image_directory = directory = '/Users/luisa/Documents/BA_Thesis/Datasets for Multiple Instance Seg/CVPPP2017_instances/training/A1/'
+    Plants = CustomDataset(image_directory, transform = None,
+                           image_transform = image_train_transform(HEIGHT, WIDTH),
+                           mask_transform = mask_train_transform(HEIGHT, WIDTH))
 
-path_name = os.path.join(image_directory, images[index].replace('rgb.png', 'fg.png'))
-"""
+    dataloader = DataLoader(Plants, batch_size = 4, shuffle = False)
+    img_example, target_example = Plants.__getitem__(3)
 
+    print(img_example.shape)
+    print(target_example.shape)
 
-#Plants = CustomDataset(image_directory)
+    input = img_example.unsqueeze(0)
+    model = UNET()
+    output = model(input)
+    print(output.shape)
 
-#dataloader = DataLoader(Plants, batch_size = 4, shuffle = False)
-#img_example, mask_example = Plants.__getitem__(3)
+    prediction = output.squeeze(0).detach().numpy().transpose(1,2,0)
+    thresh = 0.2
+    th, dst = threshold(prediction, thresh, 255, cv2.THRESH_BINARY);
 
-#print(img_example.shape)
+    plt.imshow(dst)
+    plt.show()
+    print('finished')
 
 #plt.subplot(1,2,1)
 #plt.title('Image')

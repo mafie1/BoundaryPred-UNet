@@ -62,7 +62,7 @@ class UNET(nn.Module): #requires input of shape [3,1,height, width]
             x = down(x)
             skip_connections.append(x) #save features before maxpooling
             x = self.pool(x)
-            print(x.shape)
+            #print(x.shape)
         x = self.bottleneck(x) #now at 1024 features
 
         skip_connections = skip_connections[::-1] #reverse concatenation list for decoder path
@@ -103,8 +103,7 @@ def test():
 
 
 
-sample_image = np.array(Image.open('Sample_Image.jpg'))#.convert("RGB"))
-print(sample_image.shape)
+
 #sample_image = torch.from_numpy(sample_image)
 #print(sample_image.shape)
 

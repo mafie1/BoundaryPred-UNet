@@ -6,8 +6,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from model_from_spoco import UNet_spoco
-from Preprocessing.dataset_plants_multiple import CustomDatasetMultiple
+from UNET import UNET
+from Preprocessing.dataset_plants_boundary import CustomDataset
+from Preprocessing.plant_transforms import image_train_transform, mask_train_transform
 
 
 def trainer():
@@ -24,7 +25,7 @@ def trainer():
 
     image_directory = '/Users/luisa/Documents/BA_Thesis/Datasets for Multiple Instance Seg/CVPPP2017_instances/training/A1'
 
-    Plants = CustomDatasetMultiple(image_directory,
+    Plants = CustomDataset(image_directory,
                                    transform=None,
                                    image_transform= image_train_transform(HEIGHT, WIDTH),
                                    mask_transform= mask_train_transform(HEIGHT, WIDTH)
