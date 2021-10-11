@@ -3,6 +3,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import os
+import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -15,15 +16,15 @@ def trainer():
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     #lambda_1 = lambda epoch: 0.5
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    EPOCHS = 30
-    HEIGHT, WIDTH = 128, 128
+    EPOCHS = 2
+    HEIGHT, WIDTH = 100, 100
     IN_CHANNELS = 3  # RGB
-    OUT_CHANNELS = 16 #output dimensions of embedding space
+    OUT_CHANNELS = 1 #output dimensions of embedding space
 
     torch.manual_seed(1)
-    #torch.manual_seed(0)
 
-    image_directory = '/Users/luisa/Documents/BA_Thesis/Datasets for Multiple Instance Seg/CVPPP2017_instances/training/A1'
+
+    image_directory = '/Users/luisa/Documents/BA_Thesis/Datasets for Multiple Instance Seg/CVPPP2017_instances/training/A1/'
 
     Plants = CustomDataset(image_directory,
                                    transform=None,
@@ -37,16 +38,15 @@ def trainer():
     validation_loader = DataLoader(val_set, batch_size=8, shuffle = False)
 
 
-    #model_dir = '/Users/luisa/Documents/BA_Thesis/Embedding UNet/Code/saved_models/multi_seg'
-    model_dir = '/Users/luisa/Documents/BA_Thesis/Embedding UNet/Code/saved_models/time_evolution'
-    model = UNet_spoco(in_channels=IN_CHANNELS, out_channels=OUT_CHANNELS)
+    model_dir = '/Users/luisa/Documents/BA_Thesis/BoundaryPred UNet/Code/saved_models'
+    model = UNET()
 
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
     #scheduler = StepLR(optimizer, step_size=1, gamma=0.5)
     #scheduler = lr_scheduler.MultiplicativeLR(optimizer, lambda_1)
 
-    loss_function = DiscriminativeLoss()
-    writer = SummaryWriter('runs/multi_runs')
+    loss_function = nn.BCEWithLogitsLoss()
+    #writer = SummaryWriter('runs/multi_runs')
 
     loss_statistic = np.array([])
     validation_loss_statistic = np.array([])
@@ -74,7 +74,7 @@ def trainer():
             running_loss += loss.item()
             print(loss.item())
 
-            torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
+            #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
 
 
 
@@ -94,19 +94,20 @@ def trainer():
         validation_loss_statistic = np.append(validation_loss_statistic, validation_loss)
 
 
-        writer.add_scalar('Loss/training_loss of batch', running_loss, i)
-        writer.flush()
+        #writer.add_scalar('Loss/training_loss of batch', running_loss, i)
+        #writer.flush()
 
 
-       # loss_output_epoch = train_function(dataloader, model, optimizer, loss_function, DEVICE)
-
+        #loss_output_epoch = train_function(dataloader, model, optimizer, loss_function, DEVICE)
         #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
 
         print('')
         print('Completed {}/{} Epochs of Training'.format(i + 1, EPOCHS))
 
-    #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(EPOCHS)))
+    torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(EPOCHS)))
 
+
+    plt.title('Statistic for Train Loss and Validation Loss ')
     plt.scatter(np.linspace(1, EPOCHS, EPOCHS), loss_statistic, label = 'Train Loss')
     plt.scatter(np.linspace(1, EPOCHS, EPOCHS), validation_loss_statistic, label = 'Validation Loss')
 

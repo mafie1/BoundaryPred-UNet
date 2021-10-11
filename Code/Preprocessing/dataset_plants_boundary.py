@@ -33,11 +33,11 @@ class CustomDataset(Dataset):
         #mask = np.array(mask/255, dtype=np.int64)
 
         if self.image_transform is not None:
-            print('start image transform')
+            #print('start image transform')
             image = self.image_transform(image)
 
         if self.mask_transform is not None:
-            print('start mask transform')
+            #print('start mask transform')
             mask = self.mask_transform(mask)
 
         return image, mask
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     from cv2 import threshold
     import cv2
     HEIGHT, WIDTH = 128, 128
-    image_directory = directory = '/Users/luisa/Documents/BA_Thesis/Datasets for Multiple Instance Seg/CVPPP2017_instances/training/A1/'
+    image_directory = '/Users/luisa/Documents/BA_Thesis/Datasets for Multiple Instance Seg/CVPPP2017_instances/training/A1/'
     Plants = CustomDataset(image_directory, transform = None,
                            image_transform = image_train_transform(HEIGHT, WIDTH),
                            mask_transform = mask_train_transform(HEIGHT, WIDTH))
