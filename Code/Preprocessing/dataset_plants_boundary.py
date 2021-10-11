@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 import numpy as np
+import skimage.segmentation
 from torch.utils.data import Dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -8,7 +9,6 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
 from plant_transforms import mask_train_transform, image_train_transform
-
 
 
 
@@ -27,20 +27,19 @@ class CustomDataset(Dataset):
     def __getitem__(self, index):
         img_path = os.path.join(self.directory, self.images[index])
         mask_path = os.path.join(self.directory, self.images[index].replace('rgb.png', 'fg.png'))
-        image = np.array(Image.open(img_path).convert("RGB"), dtype = np.float32)
+        image = np.array(Image.open(img_path).convert("RGB"))
         mask = np.array(Image.open(mask_path).convert("L"), dtype= np.float32)
-        mask = np.array(mask/255, dtype=np.int64)
 
-
-        if self.transform is not None:
-            augmentations = self.transform(image = image, mask = mask)
-            image = augmentations['image']
-            mask = augmentations['mask']
+        kernel = np.ones((5, 5), np.uint8)
+        mask = np.array(skimage.segmentation.find_boundaries(mask), dtype=np.float32)
+        #mask = np.array(mask/255, dtype=np.int64)
 
         if self.image_transform is not None:
+            print('start image transform')
             image = self.image_transform(image)
 
         if self.mask_transform is not None:
+            print('start mask transform')
             mask = self.mask_transform(mask)
 
         return image, mask
