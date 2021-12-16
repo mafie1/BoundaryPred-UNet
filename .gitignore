@@ -1,0 +1,8 @@
+
+.idea/
+
+.DS_Store
+
+Code/__pycache__/
+
+Code/Statistic_boundary_loss.png
