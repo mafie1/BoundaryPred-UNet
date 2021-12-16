@@ -8,12 +8,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 from utils import dice_loss
+from tqdm import tqdm
 
 
 from UNET import UNET
 from Preprocessing.dataset_plants_boundary import CustomDataset, image_train_transform, mask_train_transform
 
 def trainer():
+    #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     EPOCHS = 10
@@ -48,7 +52,8 @@ def trainer():
 
     relative_path = '~/Documents/BA_Thesis/BoundaryPred_UNet/Code/saved_models'
     model_dir = os.path.expanduser(relative_path)
-    model = UNET()
+    
+    model = UNET().to(DEVICE)
 
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
@@ -59,7 +64,7 @@ def trainer():
 
     #print(optimizer.state_dict())
 
-    for i in range(0, EPOCHS):
+    for i in tqdm(range(0, EPOCHS)):
         print('Entering Training Epoch {} out of {}'.format(i, EPOCHS))
 
         model.train()
