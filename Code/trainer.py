@@ -11,6 +11,7 @@ from utils import dice_loss
 from tqdm import tqdm
 import warnings
 
+
 warnings.filterwarnings("ignore")
 
 
@@ -23,8 +24,9 @@ def trainer():
 
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    EPOCHS = 1
-    HEIGHT = 200
+    print('Device = ', DEVICE)
+    EPOCHS = 100
+    HEIGHT = 512
     WIDTH = HEIGHT
     IN_CHANNELS = 3  # RGB
     OUT_CHANNELS = 1 #output dimensions of embedding space
@@ -57,7 +59,6 @@ def trainer():
     model_dir = os.path.expanduser(relative_path)
 
     model = UNET().to(DEVICE)
-
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     loss_function = nn.BCEWithLogitsLoss() #nn.BCELoss() #dice_loss #nn.BCEWithLogitsLoss()
@@ -68,13 +69,11 @@ def trainer():
     #print(optimizer.state_dict())
 
     for i in tqdm(range(0, EPOCHS)):
-        print('Entering Training Epoch {} out of {}'.format(i, EPOCHS))
-
+        #print('Entering Training Epoch {} out of {}'.format(i, EPOCHS))
         model.train()
         running_loss = 0
 
         for images, targets in dataloader:
-
             images, targets = images.to(DEVICE), targets.to(DEVICE)
 
             #zero parameter gradients
@@ -94,10 +93,11 @@ def trainer():
 
         loss_statistic = np.append(loss_statistic, running_loss)
 
-        if i in [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]:
+        if i in [0, 90]:
             #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
             prediction_out = preds.squeeze().cpu().detach().numpy()[0]
-            plt.imsave('saved_images/Prediction-{}-{}.png'.format(EPOCHS, HEIGHT), prediction_out,)
+            plt.imsave('saved_images/Prediction-{}-{}.png'.format(EPOCHS, HEIGHT), prediction_out)
+
 
         #Validation Loss
         model.eval()
@@ -117,8 +117,7 @@ def trainer():
         print('')
         print('Completed {}/{} Epochs of Training'.format(i + 1, EPOCHS))
 
-    torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(EPOCHS)))
-
+    torch.save(model.state_dict(), os.path.join(model_dir, 'epoch-{}.pt'.format(EPOCHS)))
 
     plt.figure(figsize=(12, 9))
     plt.title('Statistic for Train Loss and Validation Loss for {}x{} images and Dice Loss, Epochs:{}'.format(HEIGHT, WIDTH, EPOCHS))
@@ -130,7 +129,7 @@ def trainer():
     plt.ylabel('Training and Validation Loss')
     plt.yscale('log')
     plt.legend(borderpad = True )
-    plt.savefig('Statistic_boundary_loss.png')
+    plt.savefig('saved_images/Statistic_boundary_loss{}.png'.format(EPOCHS))
     #plt.show()
 
 if __name__ == '__main__':
