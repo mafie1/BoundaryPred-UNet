@@ -109,7 +109,7 @@ def trainer():
                 validation_loss = loss_function(predictions, targets)
                 running_validation_loss += validation_loss * images.size(0)
 
-        validation_loss_statistic = np.append(validation_loss_statistic.cpu(), running_validation_loss)
+        validation_loss_statistic = np.append(validation_loss_statistic, running_validation_loss.cpu())
 
         #loss_output_epoch = train_function(dataloader, model, optimizer, loss_function, DEVICE)
         #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
