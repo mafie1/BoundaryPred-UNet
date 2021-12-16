@@ -52,7 +52,7 @@ def trainer():
 
     relative_path = '~/Documents/BA_Thesis/BoundaryPred_UNet/Code/saved_models'
     model_dir = os.path.expanduser(relative_path)
-    
+
     model = UNET().to(DEVICE)
 
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
@@ -93,7 +93,7 @@ def trainer():
 
         if i in [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]:
             #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
-            prediction_out = preds.squeeze().detach().numpy()[0]
+            prediction_out = preds.squeeze().cpu().detach().numpy()[0]
             plt.imsave('saved_images/Prediction-{}-{}.png'.format(EPOCHS, HEIGHT), prediction_out,)
 
         #Validation Loss
