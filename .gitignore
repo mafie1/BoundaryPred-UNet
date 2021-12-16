@@ -6,3 +6,19 @@
 Code/__pycache__/
 
 Code/Statistic_boundary_loss.png
+
+Code/Preprocessing/__pycache__/
+
+Code/saved_images/
+
+Code/saved_models/epoch-1.pt
+
+Code/saved_models/epoch-10.pt
+
+Code/saved_models/epoch-5.pt
+
+Code/saved_models/epoch-20.pt
+
+Code/saved_models/epoch-100.pt
+
+Code/Preprocessing/Image_Boundary.png

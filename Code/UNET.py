@@ -27,7 +27,7 @@ class DoubleConv(nn.Module):
 
 
 class UNET(nn.Module): #requires input of shape [3,1,height, width]
-    def __init__(self, in_channels=3, out_channels=1, features=[64, 128, 256]):#features is f_map in spoco 512
+    def __init__(self, in_channels=3, out_channels=1, features=[32, 64, 128]):#features is f_map in spoco 512
 
         super(UNET, self).__init__()
 
@@ -39,7 +39,6 @@ class UNET(nn.Module): #requires input of shape [3,1,height, width]
         for feature in features:
             self.downs.append(DoubleConv(in_channels, feature))
             in_channels = feature
-
 
         self.bottleneck = DoubleConv(features[-1], features[-1] * 2)  # bottom of U-net 1024 --> 512 features to 1024 features; could also be integrated into the Down part of UNet
 
@@ -84,10 +83,6 @@ class UNET(nn.Module): #requires input of shape [3,1,height, width]
             x = self.ups[idx + 1](concat_skip)
 
         return self.final_conv(x) #torch.sigmoid(self.final_cov(x))
-
-
-
-
 
 
 #______________________________
