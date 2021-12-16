@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 import random
 from utils import dice_loss
 from tqdm import tqdm
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 from UNET import UNET
@@ -20,8 +23,8 @@ def trainer():
 
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    EPOCHS = 10
-    HEIGHT = 512
+    EPOCHS = 1
+    HEIGHT = 200
     WIDTH = HEIGHT
     IN_CHANNELS = 3  # RGB
     OUT_CHANNELS = 1 #output dimensions of embedding space
