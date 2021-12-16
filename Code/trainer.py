@@ -64,7 +64,7 @@ def trainer():
 
     loss_statistic = np.array([])
     validation_loss_statistic = np.array([])
-
+    #map_location="cpu"
     #print(optimizer.state_dict())
 
     for i in tqdm(range(0, EPOCHS)):
@@ -104,6 +104,7 @@ def trainer():
         with torch.no_grad():
             running_validation_loss = 0
             for images, targets in validation_loader:
+                images, targets = images.to(DEVICE), targets.to(DEVICE)
                 predictions = model(images)
                 validation_loss = loss_function(predictions, targets)
                 running_validation_loss += validation_loss * images.size(0)
