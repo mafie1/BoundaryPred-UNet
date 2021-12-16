@@ -25,7 +25,7 @@ def trainer():
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     print('Device = ', DEVICE)
-    EPOCHS = 100
+    EPOCHS = 2000
     HEIGHT = 512
     WIDTH = HEIGHT
     IN_CHANNELS = 3  # RGB
@@ -93,7 +93,7 @@ def trainer():
 
         loss_statistic = np.append(loss_statistic, running_loss)
 
-        if i in [0, 90]:
+        if i in [0, 500, 1000, 1500, 2000]:
             #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
             prediction_out = preds.squeeze().cpu().detach().numpy()[0]
             plt.imsave('saved_images/Prediction-{}-{}.png'.format(EPOCHS, HEIGHT), prediction_out)
@@ -114,8 +114,8 @@ def trainer():
         #loss_output_epoch = train_function(dataloader, model, optimizer, loss_function, DEVICE)
         #torch.save(model, os.path.join(model_dir, 'epoch-{}.pt'.format(i)))
 
-        print('')
-        print('Completed {}/{} Epochs of Training'.format(i + 1, EPOCHS))
+        #print('')
+        #print('Completed {}/{} Epochs of Training'.format(i + 1, EPOCHS))
 
     torch.save(model.state_dict(), os.path.join(model_dir, 'epoch-{}.pt'.format(EPOCHS)))
 
