@@ -25,8 +25,8 @@ def trainer():
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     print('Device = ', DEVICE)
-    EPOCHS = 2000
-    HEIGHT = 512
+    EPOCHS = 2
+    HEIGHT = 200
     WIDTH = HEIGHT
     IN_CHANNELS = 3  # RGB
     OUT_CHANNELS = 1 #output dimensions of embedding space
@@ -129,8 +129,10 @@ def trainer():
     plt.ylabel('Training and Validation Loss')
     plt.yscale('log')
     plt.legend(borderpad = True )
-    plt.savefig('saved_images/Statistic_boundary_loss{}.png'.format(EPOCHS))
+
+    #plt.imsave('saved_images/Statistic_boundary_loss{}.png'.format(EPOCHS), prediction_out)
     #plt.show()
+    plt.savefig('saved_images/Statistic_boundary_loss{}.png'.format(EPOCHS))
 
 if __name__ == '__main__':
     trainer()
