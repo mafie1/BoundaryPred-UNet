@@ -25,8 +25,8 @@ def trainer():
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     print('Device = ', DEVICE)
-    EPOCHS = 2
-    HEIGHT = 200
+    EPOCHS = 3000
+    HEIGHT = 512
     WIDTH = HEIGHT
     IN_CHANNELS = 3  # RGB
     OUT_CHANNELS = 1 #output dimensions of embedding space
