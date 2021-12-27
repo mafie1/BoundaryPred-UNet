@@ -19,12 +19,13 @@ from UNET import UNET
 from Preprocessing.dataset_plants_boundary import CustomDataset, image_train_transform, mask_train_transform
 
 def trainer():
+    print()
+
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
     LEARNING_RATE = 0.001 #1e-3 empfohlen
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print('Device = ', DEVICE)
     EPOCHS = 3000
     HEIGHT = 512
     WIDTH = HEIGHT
@@ -32,6 +33,8 @@ def trainer():
     OUT_CHANNELS = 1 #output dimensions of embedding space
     BATCH_SIZE = 4
 
+    print('Device = ', DEVICE)
+    
     rel_image_dir = '~/Documents/BA_Thesis/CVPPP2017_instances/training/A1'
     image_directory = os.path.expanduser(rel_image_dir)
 

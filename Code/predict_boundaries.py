@@ -25,7 +25,7 @@ Plants = CustomDataset(image_directory,
 
 random.seed(0)
 torch.manual_seed(0)
-train_set, val_set, test_set = torch.utils.data.random_split(Plants, [80, 20, 28])
+train_set, val_set, test_set = torch.utils.data.random_split(Plants, [80, 28, 20])
 image, mask = val_set.__getitem__(0)
 #Plants.__getitem__(0)
 image = image.unsqueeze(0)
